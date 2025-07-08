@@ -1,0 +1,59 @@
+# Node modules (installed dependencies)
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.*      # if using multiple .env files like .env.production
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Optional npm cache and debug files
+.npm/
+.cache/
+
+# Build output (e.g. dist folders from bundlers)
+dist/
+build/
+
+# Coverage reports (for testing)
+coverage/
+
+# PM2 logs and dumps (process manager)
+*.pm2
+*.dmp
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ESLint cache
+.eslintcache
+
+# Yarn or pnpm lock files (if using one, ignore the other)
+# yarn.lock
+# pnpm-lock.yaml
+
+# Next.js or Nuxt build folders (if using)
+.next/
+.nuxt/
+out/
