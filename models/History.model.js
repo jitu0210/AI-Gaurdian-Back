@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const commentSchema = mongoose.Schema({
+const historySchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
@@ -10,11 +10,8 @@ const commentSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Video",
         required:true,
-    },
-    comment:{
-        type:String,
-        required:true,
     }
-} , {timestamps:true})
+},{timestamps:true});   
 
-export const Comment = mongoose.model("Comment", commentSchema)
+
+export const History = mongoose.model("History", historySchema);
