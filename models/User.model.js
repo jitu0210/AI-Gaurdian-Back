@@ -37,18 +37,12 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
-    history: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "History",
-    },
-    refreshToken: {
-      type: String,
-      default: null,
-      select: false,
-    },
-  },
-  { timestamps: true }
-);
+    history:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"History",
+    }
+},{timestamps:true
+})
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
