@@ -6,7 +6,7 @@ import {
   generateRefreshToken,
 } from "../config/jwt.js";
 
-// ✅ Register Controller
+
 const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -30,7 +30,7 @@ const register = async (req, res) => {
       password,
     });
 
-    // You don’t really need to query again. Return fields manually.
+    
     return res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -44,7 +44,7 @@ const register = async (req, res) => {
   }
 };
 
-// ✅ Login Controller
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,7 +62,7 @@ const login = async (req, res) => {
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    // 💡 You should store the refresh token in DB if you're managing sessions
+    
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -81,7 +81,7 @@ const login = async (req, res) => {
   }
 };
 
-// ✅ Logout Controller
+
 const logout = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -95,7 +95,7 @@ const logout = async (req, res) => {
     const user = await User.findById(decoded.userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    user.refreshToken = null; // Invalidate token
+    user.refreshToken = null; 
     await user.save();
 
     return res.status(200).json({ message: "Logout successful" });

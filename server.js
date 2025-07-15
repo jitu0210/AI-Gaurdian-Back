@@ -16,8 +16,10 @@ connectDB()
 const port = process.env.PORT || 8000
 
 import userrouters from "./routes/user.routes.js"
+import videoroutes from "./routes/video.routes.js"
 
 app.use("/api/v1/users", userrouters)
+app.use("/api/v1/videos", videoroutes)
 
 app.listen(port,()=>{
     console.log(`Server is running on ${port}`)
