@@ -1,7 +1,6 @@
 import cloudinary from "../config/cloudinary.js";
 import Video from "../models/Video.model.js";
 import nodemailer from "nodemailer";
-import Comment from "../models/Comment.model.js";
 import streamifier from "streamifier";
 
 const uploadToCloudinary = (buffer, options) => {
@@ -141,18 +140,6 @@ const getShareableLink = async (req, res) => {
   res.json({ link });
 };
 
-const addComment = async (req, res) => {
-  const { videoId } = req.params;
-  const { content } = req.body;
-
-  const comment = await Comment.create({
-    video: videoId,
-    user: req.user._id,
-    content,
-  });
-
-  res.status(201).json(comment);
-};
 
 const reportVideo = async (req, res) => {
   const { videoId } = req.params;
@@ -189,12 +176,25 @@ const reportVideo = async (req, res) => {
   res.json({ message: "Report sent to developer" });
 };
 
+const getMyVideos = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const videos = await Video.find({ uploader: userId });
+
+    return res.status(200).json({ success: true, videos });
+  } catch (error) {
+    console.error("Get My Videos Error:", error);
+    return res.status(500).json({ error: "Server error while fetching your videos" });
+  }
+};
+
 export {
   uploadVideo,
   deleteVideo,
   likeVideo,
   dislikeVideo,
   getShareableLink,
-  addComment,
   reportVideo,
+  getMyVideos,
 };

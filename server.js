@@ -17,9 +17,14 @@ const port = process.env.PORT || 8000
 
 import userrouters from "./routes/user.routes.js"
 import videoroutes from "./routes/video.routes.js"
+import historyroutes from "./routes/history.routes.js"
+import commentroutes from "./routes/comment.routes.js"
 
 app.use("/api/v1/users", userrouters)
 app.use("/api/v1/videos", videoroutes)
+app.use("/api/v1/history", historyroutes)
+app.use("/api/v1/comment", commentroutes)
+
 
 app.listen(port,()=>{
     console.log(`Server is running on ${port}`)
