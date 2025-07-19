@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique:true
+      unique: true,
     },
     password: {
       type: String,
@@ -37,12 +37,21 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
-    history:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"History",
-    }
-},{timestamps:true
-})
+    history: [
+      {
+        video: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Video",
+        },
+        watchedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
