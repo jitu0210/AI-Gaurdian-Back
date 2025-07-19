@@ -41,7 +41,7 @@ const uploadVideo = async (req, res) => {
     const newVideo = await Video.create({
       title,
       description,
-      uploader: userId,
+      uploader: req.user._id,
       url: videoResult.secure_url,
       thumbnail: thumbnailResult.secure_url,
       cloudinaryVideoId: videoResult.public_id,
@@ -67,17 +67,21 @@ const deleteVideo = async (req, res) => {
       return res.status(404).json({ error: "Video not found" });
     }
 
-    // Handle both raw ObjectId and populated uploader object
+    console.log("Logged-in user:", req.user._id);
+    console.log("Raw uploader:", video.uploader);
+
     const uploaderId =
       video.uploader && video.uploader._id
         ? video.uploader._id
         : video.uploader;
 
-    if (String(uploaderId) !== String(req.user._id)) {
+    console.log("Uploader ID to compare:", uploaderId);
+
+    if (String(video.uploader) !== String(req.user._id)) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    // Delete video from Cloudinary
+    // Cloudinary deletions...
     if (video.cloudinaryVideoId) {
       await cloudinary.uploader.destroy(video.cloudinaryVideoId, {
         resource_type: "video",
@@ -97,9 +101,6 @@ const deleteVideo = async (req, res) => {
       .json({ error: "Internal Server Error", details: err.message });
   }
 };
-
-
-
 
 const likeVideo = async (req, res) => {
   const video = await Video.findById(req.params.id);
