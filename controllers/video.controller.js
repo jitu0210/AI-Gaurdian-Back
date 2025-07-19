@@ -102,34 +102,99 @@ const deleteVideo = async (req, res) => {
 };
 
 const likeVideo = async (req, res) => {
-  const video = await Video.findById(req.params.id);
-  const userId = req.user._id;
+  try {
+    const video = await Video.findById(req.params.id);
+    const userId = req.user._id;
 
-  if (!video.likes.includes(userId)) {
+    if (!video) {
+      return res.status(404).json({ error: "Video not found" });
+    }
+
+    const liked = video.likes.includes(userId);
+    const disliked = video.dislikes.includes(userId);
+
+    if (liked) {
+      // Unlike the video
+      video.likes.pull(userId);
+      await video.save();
+      return res.json({ message: "Video unliked" });
+    }
+
+    // Like the video
     video.likes.push(userId);
-    video.dislikes = video.dislikes.filter(
-      (id) => id.toString() !== userId.toString()
-    );
-  }
 
-  await video.save();
-  res.json({ message: "Video liked" });
+    if (disliked) {
+      // Remove dislike if previously disliked
+      video.dislikes.pull(userId);
+    }
+
+    await video.save();
+    return res.json({ message: "Video liked" });
+  } catch (error) {
+    console.error("Like Video Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
+
 
 const dislikeVideo = async (req, res) => {
-  const video = await Video.findById(req.params.id);
-  const userId = req.user._id;
+  try {
+    const video = await Video.findById(req.params.id);
+    const userId = req.user._id;
 
-  if (!video.dislikes.includes(userId)) {
+    if (!video) {
+      return res.status(404).json({ error: "Video not found" });
+    }
+
+    const disliked = video.dislikes.includes(userId);
+    const liked = video.likes.includes(userId);
+
+    if (disliked) {
+      // Remove dislike
+      video.dislikes.pull(userId);
+      await video.save();
+      return res.json({ message: "Video undisliked" });
+    }
+
+    // Add dislike
     video.dislikes.push(userId);
-    video.likes = video.likes.filter(
-      (id) => id.toString() !== userId.toString()
-    );
-  }
 
-  await video.save();
-  res.json({ message: "Video disliked" });
+    if (liked) {
+      // Remove like if previously liked
+      video.likes.pull(userId);
+    }
+
+    await video.save();
+    return res.json({ message: "Video disliked" });
+  } catch (error) {
+    console.error("Dislike Video Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
+
+
+const watchVideo = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { videoId } = req.params;
+
+    const video = await Video.findById(videoId);
+    if (!video) return res.status(404).json({ error: "Video not found" });
+
+    const alreadyViewed = video.viewedBy.includes(userId);
+
+    if (!alreadyViewed) {
+      video.views += 1;
+      video.viewedBy.push(userId);
+      await video.save();
+    }
+
+    res.json({ message: "Video fetched", video });
+  } catch (err) {
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+};
+
 
 const getShareableLink = async (req, res) => {
   const { videoId } = req.params;
@@ -194,6 +259,7 @@ export {
   deleteVideo,
   likeVideo,
   dislikeVideo,
+  watchVideo,
   getShareableLink,
   reportVideo,
   getMyVideos,
