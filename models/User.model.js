@@ -16,39 +16,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-    },
-    subscriptions: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    watchLater: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Video",
-    },
-    likedVideos: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Video",
-    },
-    dislikedVideos: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Video",
-    },
-    comments: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-    },
-    history: [
-      {
-        video: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Video",
-        },
-        watchedAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
+    }
   },
   { timestamps: true }
 );
