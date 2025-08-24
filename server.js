@@ -21,11 +21,13 @@ import analyzeRoutes from "./routes/analyze.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js"; 
 import adminRoutes from "./routes/admin.routes.js";
 
+
 // Route middlewares
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/analysis", analyzeRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/analyze", analyzeRoutes);
 
 
 app.get("/api/v1/users/test", (req, res) => {
