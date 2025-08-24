@@ -21,12 +21,16 @@ const userSchema = new mongoose.Schema(
     apiKey: {
       type: String,
       unique: true,
-      sparse: true, 
+      sparse: true,
+    },
+    refreshToken: {
+      type: String,
+      default: null,
     },
     isAdmin: {
       type: Boolean,
-      default: false
-   },
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -43,9 +47,9 @@ userSchema.methods.matchPassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
-// Generate API Key (for user after registration/login)
+// Generate API Key
 userSchema.methods.generateApiKey = function () {
-  const apiKey = crypto.randomBytes(32).toString("hex"); // secure random key
+  const apiKey = crypto.randomBytes(32).toString("hex");
   this.apiKey = apiKey;
   return apiKey;
 };

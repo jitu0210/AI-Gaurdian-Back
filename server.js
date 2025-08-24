@@ -27,6 +27,11 @@ app.use("/api/v1/analysis", analyzeRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
+
+app.get("/api/v1/users/test", (req, res) => {
+  res.send("User route is working!");
+});
+
 // Start server
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

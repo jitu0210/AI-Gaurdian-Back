@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
       return next(); // ✅ proceed if API key valid
     }
 
-    // 2️⃣ If no API Key, fallback to JWT token (for website auth)
+    // 2️⃣ Fallback to JWT token
     let token;
     if (
       req.headers.authorization &&
@@ -28,7 +28,9 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
+
+    // Use the same key as in token payload
+    req.user = await User.findById(decoded.userId).select("-password");
 
     if (!req.user) {
       return res.status(401).json({ error: "User not found" });
@@ -37,6 +39,9 @@ const authMiddleware = async (req, res, next) => {
     next();
   } catch (err) {
     console.error("Auth Error:", err);
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "Token expired" });
+    }
     return res.status(401).json({ error: "Invalid or expired credentials" });
   }
 };
