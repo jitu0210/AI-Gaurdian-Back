@@ -22,12 +22,17 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import queryRoutes from "./routes/query.routes.js";
 
+
 // Route middlewares
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/analysis", analyzeRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/admin", adminRoutes);
+<<<<<<< HEAD
 app.use("/dashboard", queryRoutes);
+=======
+app.use("/api/analyze", analyzeRoutes);
+>>>>>>> a8b911d634d452a07d9246da06d7c8c95cdc1b42
 
 
 app.get("/api/v1/users/test", (req, res) => {

@@ -11,9 +11,28 @@ const analysisSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isSafe: {                // decision field
+    isSafe: { // decision field
       type: Boolean,
       required: true,
+    },
+    category: {
+      type: String,
+      enum: [
+        "Hate Speech",
+        "Harassment",
+        "Sexually Explicit",
+        "Dangerous & Illegal",
+        "Prompt Injection",
+        "Misinformation",
+        null,
+      ],
+      default: null,
+    },
+    severity: {
+      type: Number,
+      min: 0.0,
+      max: 1.0,
+      default: 0,
     },
     emotions: {
       anger: { type: Number, default: 0 },
