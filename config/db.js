@@ -10,7 +10,7 @@ const connectDB = async () => {
 
     // Show cluster name and host
     console.log(`✅ Database connected successfully: ${conn.connection.name}`);
-    console.log(`Cluster host: ${conn.connection.host}`);
+    // console.log(`Cluster host: ${conn.connection.host}`);
 
   } catch (error) {
     console.error("❌ Database connection failed...");
