@@ -1,10 +1,21 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 
-const protect = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
-    let token;
+    // 1️⃣ Check for API Key in headers
+    const apiKey = req.header("x-api-key");
+    if (apiKey) {
+      const user = await User.findOne({ apiKey }).select("-password");
+      if (!user) {
+        return res.status(403).json({ error: "Invalid API Key" });
+      }
+      req.user = user;
+      return next(); // ✅ proceed if API key valid
+    }
 
+    // 2️⃣ If no API Key, fallback to JWT token (for website auth)
+    let token;
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -17,11 +28,7 @@ const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded token:", decoded);
-
-    const id = decoded.id || decoded.id;
-
-    req.user = await User.findById(id).select("-password");
+    req.user = await User.findById(decoded.id).select("-password");
 
     if (!req.user) {
       return res.status(401).json({ error: "User not found" });
@@ -30,8 +37,8 @@ const protect = async (req, res, next) => {
     next();
   } catch (err) {
     console.error("Auth Error:", err);
-    return res.status(401).json({ error: "Invalid or expired token" });
+    return res.status(401).json({ error: "Invalid or expired credentials" });
   }
 };
 
-export default protect;
+export default authMiddleware;

@@ -1,10 +1,14 @@
-import express from 'express';
-import { login, logout, register } from '../controllers/user.controller.js';
+import express from "express";
+import { login, logout, register, generateApiKey } from "../controllers/user.controller.js";
+import authMiddleware from "../middlewares/auth.middleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.route("/register").post(register)
-router.route("/login").post(login)
-router.route("/logout").post(logout)
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
+
+// New route: regenerate API key (protected by JWT, not API key)
+router.post("/generate-api-key", authMiddleware, generateApiKey);
 
 export default router;

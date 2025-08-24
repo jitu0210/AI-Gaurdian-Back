@@ -1,25 +1,34 @@
-import express from "express"
-import dotenv from "dotenv"
-import cors from "cors"
-import connectDB from "./config/db.js"
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
+const app = express();
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-connectDB()
+// Database connection
+connectDB();
 
-const port = process.env.PORT || 8000
+// Import routes
+import userRoutes from "./routes/user.routes.js";
+import analyzeRoutes from "./routes/analyze.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js"; 
+import adminRoutes from "./routes/admin.routes.js";
 
-import userrouters from "./routes/user.routes.js"
+// Route middlewares
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/analysis", analyzeRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
-app.use("/api/v1/users", userrouters)
-
-
-app.listen(port,()=>{
-    console.log(`Server is running on ${port}`)
-})
+// Start server
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
+  console.log(`⚙️ Server is running on port ${port}`);
+});

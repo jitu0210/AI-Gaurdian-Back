@@ -104,4 +104,20 @@ const logout = async (req, res) => {
   }
 };
 
-export { register, login, logout };
+const generateApiKey = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    // generate new API key
+    const apiKey = crypto.randomBytes(32).toString("hex");
+    user.apiKey = apiKey;
+    await user.save();
+
+    res.json({ apiKey });
+  } catch (err) {
+    console.error("API Key Generation Error:", err);
+    res.status(500).json({ error: "Failed to generate API key" });
+  }
+};
+
+export { register, login, logout ,generateApiKey };
